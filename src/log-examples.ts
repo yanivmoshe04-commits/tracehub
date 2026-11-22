@@ -1,7 +1,7 @@
 import type { Log } from './log.ts';
 
     // @ts-expect-error
-const log: Log = {
+const noMessage: Log = {
     timestamp: '2023-01-01T00:00:00.000Z',
     level: 'info',
     service: 'my-service',
@@ -11,7 +11,7 @@ const log: Log = {
     }
 };
 
-const log2: Log = {
+const badLevel: Log = {
     timestamp: '2023-01-01T00:00:00.000Z',
         // @ts-expect-error
     level: 'eror',
@@ -23,7 +23,7 @@ const log2: Log = {
     }
 };
 
-const log3: Log = {
+const validLog: Log = {
     timestamp: '2023-01-01T00:00:00.000Z',
     level: 'warn',
     service: 'my-service',
@@ -34,4 +34,4 @@ const log3: Log = {
     }
 };
 
-console.log(log);
+console.log(validLog);
