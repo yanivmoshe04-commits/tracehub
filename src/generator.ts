@@ -27,3 +27,32 @@ export function createRandomLog(): Log {
 
   return log;
 }
+
+export function createErrorLog(message: string, service: string): Log {
+  const log: Log = {
+    timestamp: new Date().toISOString(),
+    level: 'error',
+    service,
+    message,
+    attributes: {
+      errorCode: String(Math.floor(Math.random() * 1000)),
+      orderId: String(Math.floor(Math.random() * 100000)),
+    },
+  };
+
+  return log;
+}
+
+const errorMessages: string[] = [
+  'Failed to process payment',
+  'User authentication failed',
+  'Database connection error',
+  'Timeout while calling external API',
+  'Invalid input data received',
+];
+export function pickBurst(): { service: string; message: string } {
+  const service = pickRandom(services);
+  const message = pickRandom(errorMessages);
+
+  return { service, message };
+}

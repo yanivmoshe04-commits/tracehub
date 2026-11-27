@@ -1,4 +1,5 @@
-import { createRandomLog } from './generator.ts';
+import { createRandomLog, pickBurst, createErrorLog } from './generator.ts';
+import type { Log } from './log.ts';
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -28,8 +29,23 @@ if (rateIndex !== -1) {
   delayMs = 1000 / rate;
 }
 
+const burstsEnabled = process.argv.includes('--bursts');
+
+let burstRemaining = 0;
+let currentBurst = pickBurst();
+
 for (let i = 0; i < count; i++) {
-  const log = createRandomLog();
+  let log: Log;
+  if (burstsEnabled && burstRemaining === 0 && Math.random() < 1 / 200) {
+    currentBurst = pickBurst();
+    burstRemaining = Math.floor(Math.random() * 21) + 10;
+  }
+  if (burstRemaining > 0) {
+    log = createErrorLog(currentBurst.message, currentBurst.service);
+    burstRemaining--;
+  } else {
+    log = createRandomLog();
+  }
   await sleep(delayMs);
   console.log(JSON.stringify(log));
 }
